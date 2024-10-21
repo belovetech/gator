@@ -2,23 +2,24 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/belovetech/gator.git/internal/config"
 )
 
 func main() {
-	fmt.Println("Gator: A simple CLI task manager")
 
-	// Read the config file
-	config, err := config.Read()
+	cfg, err := config.Read()
 	if err != nil {
-		fmt.Println("Error reading config file:", err)
-	} else {
-		fmt.Println("Config file read successfully")
-		fmt.Println("DB URL:", config.DBUrl)
-		fmt.Println("Current User Name:", config.CurrentUserName)
+		log.Fatalf("Error reading config: %v", err)
 	}
 
-	config.SetUser("John Doe")
+	fmt.Printf("Current User: %s\n", cfg.CurrentUserName)
 
+	err = cfg.SetUser("new_user")
+	if err != nil {
+		log.Fatalf("Error setting user: %v", err)
+	}
+
+	fmt.Println("User updated successfully.")
 }

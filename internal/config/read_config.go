@@ -15,7 +15,10 @@ type Config struct {
 }
 
 func Read() (Config, error) {
-	configFilePath, _ := getConfigPath()
+	configFilePath, err := getConfigPath()
+	if err != nil {
+		return Config{}, err
+	}
 	file, err := os.Open(configFilePath)
 	if err != nil {
 		if os.IsNotExist(err) {
