@@ -1,25 +1,37 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/belovetech/gator.git/internal/config"
 )
 
 func main() {
-
-	cfg, err := config.Read()
+	config, err := config.Read()
 	if err != nil {
 		log.Fatalf("Error reading config: %v", err)
 	}
 
-	fmt.Printf("Current User: %s\n", cfg.CurrentUserName)
-
-	err = cfg.SetUser("new_user")
-	if err != nil {
-		log.Fatalf("Error setting user: %v", err)
+	appState := &state{
+		config: &config,
 	}
 
-	fmt.Println("User updated successfully.")
+	cmds := commands{
+		handlers: make(map[string]func(*state, command) error),
+	}
+
+	cmds.register("login", handleLogin)
+
+	args := os.Args
+	if len(args) < 2 {
+		log.Fatalf("Error: no command provided")
+	}
+
+	cmdName, cmdArgs := args[1], args[2:]
+	err = cmds.run(appState, command{name: cmdName, args: cmdArgs})
+
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
 }
