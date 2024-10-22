@@ -1,10 +1,13 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
 	"github.com/belovetech/gator.git/internal/config"
+	"github.com/belovetech/gator.git/internal/database"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -13,7 +16,14 @@ func main() {
 		log.Fatalf("Error reading config: %v", err)
 	}
 
+	db, err := sql.Open("postgres", config.DBUrl)
+	if err != nil {
+		log.Fatalf("database connection error: %v", err)
+	}
+	dbQueries := database.New(db)
+
 	appState := &state{
+		db:     dbQueries,
 		config: &config,
 	}
 
@@ -22,6 +32,7 @@ func main() {
 	}
 
 	cmds.register("login", handleLogin)
+	cmds.register("register", handleRegister)
 
 	args := os.Args
 	if len(args) < 2 {

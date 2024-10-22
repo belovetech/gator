@@ -1,0 +1,11 @@
+- test postgres connection
+psql "postgres://belovetech:@localhost:5432/gator"
+
+- create migrations
+goose postgres "postgres://belovetech:@localhost:5432/gator" up
+
+- rollback migrations
+goose postgres "postgres://belovetech:@localhost:5432/gator" down
+
+
+postgres://belovetech:@localhost:5432/gator?sslmode=disable

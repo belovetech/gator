@@ -1,4 +1,3 @@
-// cmd_test.go
 package main
 
 import (
