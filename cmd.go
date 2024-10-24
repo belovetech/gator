@@ -57,6 +57,7 @@ func registerCommands(cmds *commands) {
 		{"feeds", handleFeeds},
 		{"follow", middlewareLoggedIn(handleFollow)},
 		{"following", middlewareLoggedIn(handleFollowing)},
+		{"unfollow", middlewareLoggedIn(handleUnfollow)},
 	}
 
 	for _, cmd := range commandList {

@@ -17,5 +17,11 @@ JOIN users AS u ON ff.user_id = u.id;
 SELECT ff.*, f.name AS feed_name, u.name AS user_name
 FROM feed_follows AS ff
 JOIN feeds AS f ON ff.feed_id = f.id
-JOIN users AS u ON ff.user_id = u.idmake 
+JOIN users AS u ON ff.user_id = u.id
 WHERE ff.user_id = $1;
+
+
+-- name: DeleteFeedFollows :exec
+DELETE FROM feed_follows
+WHERE user_id = $1 AND feed_id = $2;
+
