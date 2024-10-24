@@ -38,6 +38,8 @@ Once the configuration is set up, you can use the following commands to interact
     go run . addfeed     # Add a new RSS feed
 
     go run . agg         # Aggregate the RSS feeds
+
+    go run . feeds       # List all feeds
 ```
 
 ### Prerequisites
