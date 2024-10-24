@@ -22,12 +22,7 @@ func handleAddFeed(state *state, cmd command) error {
 		return fmt.Errorf("unable to get the current user: %v", err)
 	}
 
-	// feedExists, err := state.db.GetFeed(ctx, feedURL)
-	// if err != nil && !isFeedNotFound(err) {
-	// 	return fmt.Errorf("error checking feed existence: %v", err)
-	// }
-
-	_, err = state.db.CreateFeed(ctx, database.CreateFeedParams{
+	createdFeed, err := state.db.CreateFeed(ctx, database.CreateFeedParams{
 		ID:        uuid.New(),
 		Name:      name,
 		Url:       feedURL,
@@ -39,12 +34,24 @@ func handleAddFeed(state *state, cmd command) error {
 		return fmt.Errorf("unable to add the feed: %v", err)
 	}
 
-	feed, err := fetchFeed(ctx, feedURL)
+	_, err = state.db.CreateFeedFollow(ctx, database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		FeedID:    createdFeed.ID,
+		UserID:    user.ID,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	})
+
 	if err != nil {
-		return fmt.Errorf("unable to fetch feed after creation: %v", err)
+		return fmt.Errorf("unable to follow the feed after creation: %v", err)
 	}
+
+	// feed, err := fetchFeed(ctx, feedURL)
+	// if err != nil {
+	// 	return fmt.Errorf("unable to fetch feed after creation: %v", err)
+	// }
 	fmt.Println("The feed has been added")
-	fmt.Printf("Feed: %v\n", feed)
+	// fmt.Printf("Feed Title: %v\n", feed.Channel.Title)
 	return nil
 }
 

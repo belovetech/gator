@@ -49,6 +49,8 @@ func registerCommands(cmds commands) {
 		{"agg", handlerAgg},
 		{"addfeed", handleAddFeed},
 		{"feeds", handleFeeds},
+		{"follow", handleFollow},
+		{"following", handleFollowing},
 	}
 
 	for _, cmd := range commandList {
