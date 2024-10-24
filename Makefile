@@ -3,8 +3,10 @@ GOOSE_CMD = goose
 DB_TYPE = postgres
 MIGRATION_DIR = ./sql/schema
 
+SQLC_CMD = sqlc
 
-.PHONY: migrate-up migrate-down create-migration
+
+.PHONY: migrate-up migrate-down create-migration generate-db
 
 
 migrate-up:
@@ -24,3 +26,7 @@ create-migration:
 	fi
 	@echo "Creating new migration..."
 	$(GOOSE_CMD) -dir $(MIGRATION_DIR) create $(name) sql
+
+generate-db:
+	@echo "Generating database..."
+	$(SQLC_CMD) generate
