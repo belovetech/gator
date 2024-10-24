@@ -1,21 +1,31 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"time"
 )
 
-const feedURL = "https://www.wagslane.dev/index.xml"
-
 func handlerAgg(state *state, cmd command) error {
-	ctx := context.Background()
-
-	feeds, err := fetchFeed(ctx, feedURL)
-	if err != nil {
-		return fmt.Errorf("unable to fetch feed: %v", err)
+	if len(cmd.args) != 1 {
+		return fmt.Errorf("usage: scrapefeeds <time_between_reqs>")
 	}
 
-	fmt.Printf("Feed: %v\n", feeds)
+	timeBetweenRequests := cmd.args[0]
+	if timeBetweenRequests == "" {
+		return fmt.Errorf("time between requests cannot be empty")
+	}
 
-	return nil
+	fmt.Printf("Collecting feeds every %s\n\n", timeBetweenRequests)
+
+	// Parse the duration string into a time.Duration
+	timeBetweenReq, err := time.ParseDuration(timeBetweenRequests)
+	if err != nil {
+		return fmt.Errorf("invalid time format for time between requests: %v", err)
+	}
+
+	ticker := time.NewTicker(timeBetweenReq)
+
+	for ; ; <-ticker.C {
+		scrapeFeeds(state)
+	}
 }

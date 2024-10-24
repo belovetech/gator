@@ -43,11 +43,6 @@ func handleAddFeed(state *state, cmd command, user database.User) error {
 		return fmt.Errorf("unable to follow the feed after creation: %v", err)
 	}
 
-	// feed, err := fetchFeed(ctx, feedURL)
-	// if err != nil {
-	// 	return fmt.Errorf("unable to fetch feed after creation: %v", err)
-	// }
 	fmt.Println("The feed has been added")
-	// fmt.Printf("Feed Title: %v\n", feed.Channel.Title)
 	return nil
 }

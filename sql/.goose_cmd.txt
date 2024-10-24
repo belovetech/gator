@@ -9,3 +9,8 @@ goose postgres "postgres://belovetech:@localhost:5432/gator" down
 
 
 postgres://belovetech:@localhost:5432/gator?sslmode=disable
+
+
+TechCrunch: https://techcrunch.com/feed/
+Hacker News: https://news.ycombinator.com/rss
+Boot.dev Blog: https://blog.boot.dev/index.xml

@@ -27,25 +27,27 @@ To set up the configuration for Gator, follow these steps:
 Once the configuration is set up, you can use the following commands to interact with Gator:
 
 ```bash
-    go run . reset       # Reset the application to its initial state
+    go run . reset                          # Reset the application to its initial state
 
-    go run . login       # Log in to your account
+    go run . login <username>               # Log in to your account
 
-    go run . register    # Register a new user
+    go run . register  <username>           # Register a new user
 
-    go run . users       # List all users
+    go run . users                          # List all users
 
-    go run . addfeed     # Add a new RSS feed
+    go run . addfeed <name> <URL>           # Add a new RSS feed
 
-    go run . agg         # Aggregate the RSS feeds
+    go run . agg <time_between_reqs>        # Aggregate the RSS feeds
 
-    go run . feeds       # List all feeds
+    go run . feeds                          # List all feeds
 
-    go run . follow      # Follow a feed
+    go run . follow  <URL>                  # Follow a feed
 
-    go run . following   # List the feeds you are following
+    go run . unfollow  <URL>                # Unfollow a feed
 
-    go run . unfollow    # Unfollow a feed
+    go run . following                      # List the feeds you are following
+
+
 ```
 
 ### Prerequisites
