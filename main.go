@@ -10,8 +10,12 @@ import (
 	_ "github.com/lib/pq"
 )
 
+func loadConfig() (config.Config, error) {
+	return config.Read()
+}
+
 func main() {
-	config, err := config.Read()
+	config, err := loadConfig()
 	if err != nil {
 		log.Fatalf("Error reading config: %v", err)
 	}
@@ -31,22 +35,12 @@ func main() {
 		handlers: make(map[string]func(*state, command) error),
 	}
 
-	cmds.register("login", handleLogin)
-	cmds.register("register", handleRegister)
-	cmds.register("reset", handleReset)
-	cmds.register("users", handleUsers)
-	cmds.register("agg", handlerAgg)
-	cmds.register("addfeed", handleAddFeed)
-
 	args := os.Args
 	if len(args) < 2 {
 		log.Fatalf("Error: no command provided")
 	}
-
 	cmdName, cmdArgs := args[1], args[2:]
-	err = cmds.run(appState, command{name: cmdName, args: cmdArgs})
 
-	if err != nil {
-		log.Fatalf("Error: %v", err)
-	}
+	registerCommands(cmds)
+	runCommand(cmds, appState, cmdName, cmdArgs)
 }

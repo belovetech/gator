@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/belovetech/gator.git/internal/config"
 	"github.com/belovetech/gator.git/internal/database"
@@ -36,20 +37,29 @@ func (c *commands) run(s *state, cmd command) error {
 	return handler(s, cmd)
 }
 
-// func handleLogin(s *state, cmd command) error {
-// 	if len(cmd.args) < 1 {
-// 		return fmt.Errorf("the login handler expects a single argument, the username")
-// 	}
+func registerCommands(cmds commands) {
+	commandList := []struct {
+		name    string
+		handler func(*state, command) error
+	}{
+		{"login", handleLogin},
+		{"register", handleRegister},
+		{"reset", handleReset},
+		{"users", handleUsers},
+		{"agg", handlerAgg},
+		{"addfeed", handleAddFeed},
+	}
 
-// 	username := cmd.args[0]
-// 	if username == "" {
-// 		return fmt.Errorf("username cannot be empty")
-// 	}
+	for _, cmd := range commandList {
+		cmds.register(cmd.name, cmd.handler)
+	}
 
-// 	err := s.config.SetUser(username)
-// 	if err != nil {
-// 		return fmt.Errorf("unable to set the username")
-// 	}
-// 	fmt.Println("the user has been set")
-// 	return nil
-// }
+}
+
+func runCommand(cmds commands, appState *state, cmdName string, cmdArgs []string) error {
+	err := cmds.run(appState, command{name: cmdName, args: cmdArgs})
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
+	return nil
+}
