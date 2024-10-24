@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/belovetech/gator.git/internal/database"
@@ -36,10 +37,18 @@ func handleFollow(state *state, cmd command) error {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	})
+
 	if err != nil {
+		if isUniqueConstraintViolation(err) {
+			return fmt.Errorf("you are already following this feed")
+		}
 		return fmt.Errorf("unable to follow the feed: %v", err)
 	}
 	fmt.Println("The feed has been followed")
-	// fmt.Printf("%s\n%s\n", feed.Name, state.config.CurrentUserName)
+	fmt.Printf("%s\n%s\n", feed.Name, state.config.CurrentUserName)
 	return nil
+}
+
+func isUniqueConstraintViolation(err error) bool {
+	return strings.Contains(err.Error(), "pq: duplicate key value violates unique constraint")
 }

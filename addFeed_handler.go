@@ -31,6 +31,9 @@ func handleAddFeed(state *state, cmd command) error {
 		UpdatedAt: time.Now(),
 	})
 	if err != nil {
+		if isUniqueConstraintViolation(err) {
+			return fmt.Errorf("feed already added")
+		}
 		return fmt.Errorf("unable to add the feed: %v", err)
 	}
 
@@ -54,11 +57,3 @@ func handleAddFeed(state *state, cmd command) error {
 	// fmt.Printf("Feed Title: %v\n", feed.Channel.Title)
 	return nil
 }
-
-// func isFeedNotFound(err error) bool {
-// 	return err.Error() == "sql: no rows in result set"
-// }
-
-// func isFeedAlreadyExists(feed database.Feed) bool {
-// 	return feed.ID == uuid.Nil
-// }
