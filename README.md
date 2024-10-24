@@ -44,6 +44,8 @@ Once the configuration is set up, you can use the following commands to interact
     go run . follow      # Follow a feed
 
     go run . following   # List the feeds you are following
+
+    go run . unfollow    # Unfollow a feed
 ```
 
 ### Prerequisites
