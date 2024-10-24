@@ -31,9 +31,7 @@ func main() {
 		config: &config,
 	}
 
-	cmds := commands{
-		handlers: make(map[string]func(*state, command) error),
-	}
+	cmds := newCommandRegistry()
 
 	args := os.Args
 	if len(args) < 2 {

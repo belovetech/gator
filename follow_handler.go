@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handleFollow(state *state, cmd command) error {
+func handleFollow(state *state, cmd command, user database.User) error {
 	if len(cmd.args) < 1 {
 		return fmt.Errorf("the follow handler expects a single argument, the feedURL")
 	}
@@ -26,10 +26,6 @@ func handleFollow(state *state, cmd command) error {
 		return fmt.Errorf("unable to get the feed: %v", err)
 	}
 
-	user, err := state.db.GetUser(ctx, state.config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("unable to get the current user: %v", err)
-	}
 	_, err = state.db.CreateFeedFollow(ctx, database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		FeedID:    feed.ID,
@@ -45,7 +41,7 @@ func handleFollow(state *state, cmd command) error {
 		return fmt.Errorf("unable to follow the feed: %v", err)
 	}
 	fmt.Println("The feed has been followed")
-	fmt.Printf("%s\n%s\n", feed.Name, state.config.CurrentUserName)
+	// fmt.Printf("%s\n%s\n", feed.Name, state.config.CurrentUserName)
 	return nil
 }
 

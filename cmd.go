@@ -37,7 +37,13 @@ func (c *commands) run(s *state, cmd command) error {
 	return handler(s, cmd)
 }
 
-func registerCommands(cmds commands) {
+func newCommandRegistry() *commands {
+	return &commands{
+		handlers: make(map[string]func(*state, command) error),
+	}
+}
+
+func registerCommands(cmds *commands) {
 	commandList := []struct {
 		name    string
 		handler func(*state, command) error
@@ -47,10 +53,10 @@ func registerCommands(cmds commands) {
 		{"reset", handleReset},
 		{"users", handleUsers},
 		{"agg", handlerAgg},
-		{"addfeed", handleAddFeed},
+		{"addfeed", middlewareLoggedIn(handleAddFeed)},
 		{"feeds", handleFeeds},
-		{"follow", handleFollow},
-		{"following", handleFollowing},
+		{"follow", middlewareLoggedIn(handleFollow)},
+		{"following", middlewareLoggedIn(handleFollowing)},
 	}
 
 	for _, cmd := range commandList {
@@ -59,7 +65,7 @@ func registerCommands(cmds commands) {
 
 }
 
-func runCommand(cmds commands, appState *state, cmdName string, cmdArgs []string) error {
+func runCommand(cmds *commands, appState *state, cmdName string, cmdArgs []string) error {
 	err := cmds.run(appState, command{name: cmdName, args: cmdArgs})
 	if err != nil {
 		log.Fatalf("Error: %v", err)
