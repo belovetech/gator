@@ -14,18 +14,23 @@ func loadConfig() (config.Config, error) {
 	return config.Read()
 }
 
-func initializeState() (*database.Queries, *config.Config, error) {
+func initializeState() (*state, error) {
 	config, err := loadConfig()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	db, err := sql.Open("postgres", config.DBUrl)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return database.New(db), &config, nil
+	appState := &state{
+		db:     database.New(db),
+		config: &config,
+	}
+
+	return appState, nil
 
 }
 
@@ -38,16 +43,10 @@ func parseCommandArgs() (string, []string) {
 }
 
 func main() {
-	dbQueries, config, err := initializeState()
+	appState, err := initializeState()
 	if err != nil {
 		log.Fatalf("failed to initialize state: %v", err)
 	}
-
-	appState := &state{
-		db:     dbQueries,
-		config: config,
-	}
-
 	cmdName, cmdArgs := parseCommandArgs()
 	cmds := newCommandRegistry()
 	registerCommands(cmds)

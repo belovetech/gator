@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/belovetech/gator.git/internal/database"
+	"github.com/google/uuid"
 )
 
 func scrapeFeeds(state *state) error {
@@ -33,16 +34,38 @@ func scrapeFeeds(state *state) error {
 		return fmt.Errorf("unable to fetch feed: %v", err)
 	}
 
-	fmt.Printf("Feed Title: %s\n", feed.Channel.Title)
-	fmt.Println("--------------------")
-
-	fmt.Println("Feed Items:")
-	fmt.Println("--------------------")
 	for _, feed := range feed.Channel.Items {
-		fmt.Printf("%s\n", feed.Title)
+		pubDate, err := parsePubDate(feed.PubDate)
+		if err != nil {
+			return fmt.Errorf("unable to parse pub date: %v", err)
+		}
+
+		_, err = state.db.CreatePost(ctx, database.CreatePostParams{
+			ID:          uuid.New(),
+			FeedID:      nextFeed.ID,
+			Title:       feed.Title,
+			Url:         feed.Link,
+			Description: sql.NullString{String: feed.Description, Valid: true},
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+			PublishedAt: pubDate,
+		})
+		if err != nil {
+			if isUniqueConstraintViolation(err) {
+				continue
+			}
+			return fmt.Errorf("unable to create post: %v", err)
+		}
+		fmt.Printf("Created post: %s\n", feed.Title)
 	}
 
-	fmt.Println("--------------------")
-
 	return nil
+}
+
+func parsePubDate(date string) (time.Time, error) {
+	t, err := time.Parse(time.RFC1123, date)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return t, nil
 }

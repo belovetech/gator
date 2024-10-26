@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func handlerAgg(state *state, cmd command) error {
+func handleAggregate(state *state, cmd command) error {
 	if len(cmd.args) != 1 {
 		return fmt.Errorf("usage: scrapefeeds <time_between_reqs>")
 	}

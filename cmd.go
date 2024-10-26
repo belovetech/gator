@@ -52,12 +52,13 @@ func registerCommands(cmds *commands) {
 		{"register", handleRegister},
 		{"reset", handleReset},
 		{"users", handleUsers},
-		{"agg", handlerAgg},
+		{"agg", handleAggregate},
 		{"addfeed", middlewareLoggedIn(handleAddFeed)},
 		{"feeds", handleFeeds},
 		{"follow", middlewareLoggedIn(handleFollow)},
 		{"following", middlewareLoggedIn(handleFollowing)},
 		{"unfollow", middlewareLoggedIn(handleUnfollow)},
+		{"browse", handleBrowser},
 	}
 
 	for _, cmd := range commandList {
