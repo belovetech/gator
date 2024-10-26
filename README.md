@@ -24,29 +24,63 @@ To set up the configuration for Gator, follow these steps:
 
 ### How to Use
 
+Clone the repository:
+
+```bash
+   git clone https://github.com/belovetech/gator.git
+```
+
+Change directory to the cloned repository:
+
+install goose CLI:
+
+```bash
+   go install github.com/pressly/goose/v3/cmd/goose@latest
+   goose -v
+```
+
+Install the dependencies:
+
+```bash
+   go mod tidy
+```
+
+Run the migrations:
+
+```bash
+   make migrate-up
+```
+
+Build the application:
+
+```bash
+   go build -o gator
+```
+
 Once the configuration is set up, you can use the following commands to interact with Gator:
 
 ```bash
-    go run . reset                          # Reset the application to its initial state
+   ./gator reset                          # Reset the application to its initial state
 
-    go run . login <username>               # Log in to your account
+   ./gator login <username>               # Log in to your account
 
-    go run . register  <username>           # Register a new user
+   ./gator register  <username>           # Register a new user
 
-    go run . users                          # List all users
+   ./gator users                          # List all users
 
-    go run . addfeed <name> <URL>           # Add a new RSS feed
+   ./gator addfeed <name> <URL>           # Add a new RSS feed
 
-    go run . agg <time_between_reqs>        # Aggregate the RSS feeds
+   ./gator agg <time_between_reqs>        # Aggregate the RSS feeds
 
-    go run . feeds                          # List all feeds
+   ./gator feeds                          # List all feeds
 
-    go run . follow  <URL>                  # Follow a feed
+   ./gator follow  <URL>                  # Follow a feed
 
-    go run . unfollow  <URL>                # Unfollow a feed
+   ./gator unfollow  <URL>                # Unfollow a feed
 
-    go run . following                      # List the feeds you are following
+   ./gator following                      # List the feeds you are following
 
+   ./gator browse <LIMIT>                 # Browse the posts
 
 ```
 
