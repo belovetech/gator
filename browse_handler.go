@@ -14,7 +14,7 @@ func handleBrowser(state *state, cmd command) error {
 		var err error
 		limit, err = strconv.Atoi(cmd.args[0])
 		if err != nil {
-			return fmt.Errorf("unable to convert limit to int: %v", err)
+			return fmt.Errorf("unable to convert limit (%v) to int", cmd.args[0])
 		}
 	}
 
